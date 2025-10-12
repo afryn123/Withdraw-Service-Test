@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres_db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${DB_USER:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASS:-postgres}
+      - POSTGRES_DB=${DB_NAME:-withdraw_db}
+    ports:
+      - "5431:5431"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  # Run migration sebagai one-off command
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_DIR: cmd/migrate
+    container_name: be_withdraw_migrate
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5431
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASS=${DB_PASS:-postgres}
+      - DB_NAME=${DB_NAME:-withdraw_db}
+    networks:
+      - app-network
+    restart: "no"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_DIR: cmd/server
+    image: be_withdraw:${VERSION:-latest}
+    container_name: be_withdraw
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - "8081:8081"
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5431
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASS=${DB_PASS:-postgres}
+      - DB_NAME=${DB_NAME:-withdraw_db}
+      - JWT_SECRET=${JWT_SECRET:-SECRET}
+      - TZ=Asia/Jakarta
+    volumes:
+      - ./logs:/app/logs:delegated
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
