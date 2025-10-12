@@ -1,0 +1,542 @@
+{
+	"info": {
+		"_postman_id": "5b56cc79-c219-433f-b014-1873d7cfce23",
+		"name": "Withdraw-Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20464745",
+		"_collection_link": "https://test66-4470.postman.co/workspace/Pegadaian~d961b1c6-641f-4177-89be-99d4c560d865/collection/20464745-5b56cc79-c219-433f-b014-1873d7cfce23?action=share&source=collection_link&creator=20464745"
+	},
+	"item": [
+		{
+			"name": "createUserAndWallet",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"iyan\",\n    \"username\": \"iyan1\",\n    \"email\": \"iyan@gmail1.com\",\n    \"password\": \"iyan123\",\n    \"created_by\": \"iyan\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url_dev}}users/create",
+					"host": [
+						"{{url_dev}}users"
+					],
+					"path": [
+						"create"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "success",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"iyan\",\n    \"username\": \"iyan1\",\n    \"email\": \"iyan@gmail1.com\",\n    \"password\": \"iyan123\",\n    \"created_by\": \"iyan\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_dev}}users/create",
+							"host": [
+								"{{url_dev}}users"
+							],
+							"path": [
+								"create"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 12 Oct 2025 19:32:22 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "66"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"User created successfully\",\n    \"error\": null\n}"
+				},
+				{
+					"name": "failed",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"iyan\",\n    \"username\": \"iyan1\",\n    \"email\": \"iyan@gmail1.com\",\n    \"password\": \"iyan123\",\n    \"created_by\": \"iyan\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_dev}}users/create",
+							"host": [
+								"{{url_dev}}users"
+							],
+							"path": [
+								"create"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 12 Oct 2025 19:34:03 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "82"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": false,\n    \"message\": \"Failed to create user\",\n    \"error\": \"Failed to create user\"\n}"
+				}
+			]
+		},
+		{
+			"name": "getBalance",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"iyan\",\n    \"username\": \"iyan\",\n    \"email\": \"iyan@gmail.com\",\n    \"password\": \"iyan123\",\n    \"created_by\": \"iyan\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url_dev}}wallet/4ebd533b-2c38-4576-900b-bbe90c64f5bb/balance",
+					"host": [
+						"{{url_dev}}wallet"
+					],
+					"path": [
+						"4ebd533b-2c38-4576-900b-bbe90c64f5bb",
+						"balance"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "failed",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"iyan\",\n    \"username\": \"iyan\",\n    \"email\": \"iyan@gmail.com\",\n    \"password\": \"iyan123\",\n    \"created_by\": \"iyan\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_dev}}wallet/4ebd533b-2c38-4576-900b-bbe90c64f5b/balance",
+							"host": [
+								"{{url_dev}}wallet"
+							],
+							"path": [
+								"4ebd533b-2c38-4576-900b-bbe90c64f5b",
+								"balance"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 12 Oct 2025 19:35:07 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "84"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": false,\n    \"message\": \"Invalid user ID format\",\n    \"error\": \"Invalid user ID format\"\n}"
+				},
+				{
+					"name": "success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"iyan\",\n    \"username\": \"iyan\",\n    \"email\": \"iyan@gmail.com\",\n    \"password\": \"iyan123\",\n    \"created_by\": \"iyan\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_dev}}wallet/4ebd533b-2c38-4576-900b-bbe90c64f5bb/balance",
+							"host": [
+								"{{url_dev}}wallet"
+							],
+							"path": [
+								"4ebd533b-2c38-4576-900b-bbe90c64f5bb",
+								"balance"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 12 Oct 2025 19:36:12 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "219"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Balance retrieved successfully\",\n    \"data\": {\n        \"wallet_id\": \"dcdb0676-440a-4e39-9430-c2d2b417cfdb\",\n        \"balance\": 50000,\n        \"user\": {\n            \"user_id\": \"4ebd533b-2c38-4576-900b-bbe90c64f5bb\",\n            \"name\": \"iyan\"\n        }\n    },\n    \"error\": null\n}"
+				}
+			]
+		},
+		{
+			"name": "withdraw",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\": 10000000,\n    \"remark\": \"test\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url_dev}}transaction/withdraw",
+					"host": [
+						"{{url_dev}}transaction"
+					],
+					"path": [
+						"withdraw"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "success",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 10000,\n    \"remark\": \"test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_dev}}transaction/withdraw",
+							"host": [
+								"{{url_dev}}transaction"
+							],
+							"path": [
+								"withdraw"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 12 Oct 2025 19:37:03 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "349"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Withdraw processed successfully\",\n    \"data\": {\n        \"transaction_id\": \"796298f2-cca4-440a-9ccb-183efef51b29\",\n        \"reference_number\": \"REF-20251013-4EBD53-1760297822970\",\n        \"transaction\": {\n            \"amount\": 10000,\n            \"type\": \"withdraw\",\n            \"balance_now\": 40000,\n            \"remark\": \"test\"\n        },\n        \"user\": {\n            \"user_id\": \"4ebd533b-2c38-4576-900b-bbe90c64f5bb\",\n            \"name\": \"iyan\"\n        }\n    },\n    \"error\": null\n}"
+				},
+				{
+					"name": "failed",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 10000000,\n    \"remark\": \"test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_dev}}transaction/withdraw",
+							"host": [
+								"{{url_dev}}transaction"
+							],
+							"path": [
+								"withdraw"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 12 Oct 2025 19:40:01 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "86"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": false,\n    \"message\": \"Failed to process withdraw\",\n    \"error\": \"insufficient balance\"\n}"
+				}
+			]
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"iyan@gmail.com\",\n    \"password\": \"iyan123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url_dev}}auth/login",
+					"host": [
+						"{{url_dev}}auth"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "success",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"iyan@gmail.com\",\n    \"password\": \"iyan123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_dev}}auth/login",
+							"host": [
+								"{{url_dev}}auth"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 12 Oct 2025 19:40:56 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "248"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Login successful\",\n    \"data\": {\n        \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NjAzODQ0NTYsInVzZXJfaWQiOiI0ZWJkNTMzYi0yYzM4LTQ1NzYtOTAwYi1iYmU5MGM2NGY1YmIifQ.fydn452XhtKxJDIwFnEPce7rH0i7X55sQrvP0HJoO3Q\"\n    },\n    \"error\": null\n}"
+				},
+				{
+					"name": "failed",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"iyan@gmail.com\",\n    \"password\": \"iyan1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_dev}}auth/login",
+							"host": [
+								"{{url_dev}}auth"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 12 Oct 2025 19:41:17 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "77"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": false,\n    \"message\": \"Authentication failed\",\n    \"error\": \"invalid password\"\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url_dev",
+			"value": ""
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
