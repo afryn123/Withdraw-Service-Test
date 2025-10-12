@@ -34,7 +34,7 @@ func NewRoutes(db *gorm.DB, route *gin.Engine) *Routes {
 	// controllers
 	walletController := controllers.NewWalletContoller(walletService)
 	userController := controllers.NewUsersContoller(userService)
-	transactionController := controllers.NewTransactionHistoriesContoller(transactionService)
+	transactionController := controllers.NewTransactionContoller(transactionService)
 	authController := controllers.NewAuthController(authService)
 
 	return &Routes{

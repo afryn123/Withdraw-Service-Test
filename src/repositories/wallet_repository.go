@@ -26,10 +26,12 @@ func (r *WalletRepository) FindByUserId(db *gorm.DB, userId uuid.UUID) (models.W
 	return data, nil
 }
 
+// Create new wallet
 func (r *WalletRepository) Create(db *gorm.DB, wallet *models.Wallets) error {
 	return db.Create(&wallet).Error
 }
 
+// Lock row for update
 func (r *WalletRepository) LockRowForUpdate(db *gorm.DB, wallet *models.Wallets) error	{
 	if err := db.Clauses(clause.Locking{Strength: "UPDATE"}).
 		Where("user_id = ?", wallet.UserID).
@@ -40,7 +42,8 @@ func (r *WalletRepository) LockRowForUpdate(db *gorm.DB, wallet *models.Wallets)
 	return nil
 }
 
-func (r *WalletRepository) UpdateWithLocking(db *gorm.DB, wallet *models.Wallets) error {
+// Update wallet with locking
+func (r *WalletRepository) Update(db *gorm.DB, wallet *models.Wallets) error {
 	
 	return db.Save(&wallet).Error
 }

@@ -14,25 +14,25 @@ import (
 
 type TransactionContoller struct {
 	transactionServive *services.TransactionService
-	logger 		   *log.Logger
-	validator       *validator.Validate
+	logger             *log.Logger
+	validator          *validator.Validate
 }
 
-func NewTransactionHistoriesContoller(transactionServive *services.TransactionService) *TransactionContoller {
+func NewTransactionContoller(transactionServive *services.TransactionService) *TransactionContoller {
 	return &TransactionContoller{
 		transactionServive: transactionServive,
-		logger:        utils.GetLogger("txn"),
-		validator:   validator.New(),
+		logger:             utils.GetLogger("txn"),
+		validator:          validator.New(),
 	}
 }
 
-func (c *TransactionContoller) Withdraw(ctx *gin.Context)  {
+func (c *TransactionContoller) Withdraw(ctx *gin.Context) {
 	dto := new(dtos.WithdrawRequestDTO)
 	if err := ctx.BindJSON(dto); err != nil {
 		c.logger.Println("[ERROR][WITHDRAW] Error binding JSON:", err)
 		utils.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request payload", "Invalid request payload")
 		return
-	} 
+	}
 	if err := c.validator.Struct(dto); err != nil {
 		message := utils.ValidationErrorResponse(err)
 		c.logger.Println("[ERROR][WITHDRAW] Validation error:", message)
@@ -58,7 +58,6 @@ func (c *TransactionContoller) Withdraw(ctx *gin.Context)  {
 		utils.ErrorResponse(ctx, http.StatusBadRequest, "Invalid user ID format", "Invalid user ID format")
 		return
 	}
-
 
 	result, err := c.transactionServive.Withdraw(userIDParse, dto.Amount, dto.Remark)
 	if err != nil {

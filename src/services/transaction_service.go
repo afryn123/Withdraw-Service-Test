@@ -61,7 +61,7 @@ func (s *TransactionService) Withdraw(userId uuid.UUID, amount int64, remark *st
 
 	wallet.Balance -= amount
 
-	err = s.walletRepo.UpdateWithLocking(tx, &wallet)
+	err = s.walletRepo.Update(tx, &wallet)
 	if err != nil {
 		s.logger.Println("[ERROR][TRANSACTION WITHDRAW] Update wallet error:", err)
 		tx.Rollback()
