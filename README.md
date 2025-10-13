@@ -14,6 +14,7 @@ Posgresql
 ## Running Guide
 
 **1. Change file name .env.example to .env and set up**
+
 **2. Install Depedencies**
 ```bash
 go mod tidy 
