@@ -57,7 +57,7 @@ func (r *Routes) AuthRouter() {
 
 func (r *Routes) UserRouter() {
 
-	api := r.route.Group("/api/users", middlewares.AuthProtected())
+	api := r.route.Group("/api/users")
 
 	// User routes
 	api.POST("/create", r.userController.Create)
