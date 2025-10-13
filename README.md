@@ -1,4 +1,4 @@
-# Golang-Fiber-Tunnel-Wifi-Project
+# Withdraw-Service-Test
 ## Documentation
 **1. README.md**
 
@@ -8,9 +8,13 @@
 logs/
 *.log
 
+## Database 
+Posgresql
+
 ## Running Guide
 
-**1. Install Depedencies**
+**1. Change file name .env.example to .env and set up**
+**2. Install Depedencies**
 ```bash
 go mod tidy 
 ```
@@ -19,14 +23,12 @@ or
 go mod download
 ```
 
-**2. Run Migration**
+**3. Run Migration**
 ```bash
 go run cmd/migrate/main.go
 ```
 
-**4. Chane file name .env.example to .env and set up**
-
-**5. Run Apps**
+**4. Run Apps**
 ```bash
 go run cmd/server/main.go
 ```
