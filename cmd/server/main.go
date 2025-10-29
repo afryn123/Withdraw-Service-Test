@@ -9,7 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
 func main() {
 	// environtment
 	env := utils.Environtment()
@@ -17,10 +16,11 @@ func main() {
 	// logger
 	utils.InitLoggers()
 	logger := utils.GetLogger("system")
-
 	if env.ApiEnv == "production" {
 		gin.SetMode(gin.ReleaseMode)
 		logger.Println("[INFO][ENV] System Started on Production")
+	} else {
+		logger.Println("[INFO][ENV] System started on Development")
 	}
 
 	// Database
@@ -33,15 +33,7 @@ func main() {
 	r := gin.Default()
 
 	// CORS
-	if env.ApiEnv == "production" {
-		gin.SetMode(gin.ReleaseMode)
-		r.Use(middlewares.Cors())
-		logger.Println("[INFO][ENV] System Started on Production")
-	} else {
-		r.Use(middlewares.Cors())
-
-		logger.Println("[INFO][ENV] System started on Development")
-	}
+	r.Use(middlewares.Cors())
 
 	// res 500 when panic
 	r.Use(middlewares.CustomRecoverPanic())
