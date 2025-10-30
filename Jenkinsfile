@@ -10,12 +10,14 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+        stage('Clone') {
             steps {
-                git branch: 'master', url: 'https://github.com/afryn123/Withdraw-Service-Test.git'
+                git branch: 'master', 
+                    url: 'https://github.com/afryn123/Withdraw-Service-Test.git',
+                    credentialsId: 'github-iyan-token'
             }
         }
-
+        
         stage('Build Docker Image') {
             steps {
                 sh """
