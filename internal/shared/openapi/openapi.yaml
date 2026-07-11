@@ -1,0 +1,392 @@
+openapi: 3.0.3
+info:
+  title: Withdraw Service API
+  version: 1.0.0
+  description: API untuk autentikasi, pengelolaan user, wallet, dan withdraw.
+servers:
+  - url: .
+    description: Server tempat dokumentasi ini disajikan
+tags:
+  - name: System
+  - name: Auth
+  - name: Users
+  - name: Wallet
+  - name: Transactions
+paths:
+  /health:
+    get:
+      tags: [System]
+      operationId: healthCheck
+      summary: Memeriksa status API
+      responses:
+        "200":
+          description: API sehat
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status:
+                    type: string
+                    example: OK
+  /api/auth/login:
+    post:
+      tags: [Auth]
+      operationId: login
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Login berhasil
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/TokenData"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /api/users/create:
+    post:
+      tags: [Users]
+      operationId: createUser
+      summary: Membuat user dan wallet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserRequest"
+      responses:
+        "201":
+          description: User berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/users/{user_id}:
+    parameters:
+      - $ref: "#/components/parameters/UserID"
+    patch:
+      tags: [Users]
+      operationId: updateUser
+      summary: Mengubah profil sendiri
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserRequest"
+      responses:
+        "200":
+          description: User berhasil diubah
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    delete:
+      tags: [Users]
+      operationId: deleteUser
+      summary: Menghapus user dan wallet sendiri
+      description: User dan wallet dihapus secara soft delete dalam satu transaksi.
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: User berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/wallet/{user_id}/balance:
+    get:
+      tags: [Wallet]
+      operationId: getWalletBalance
+      summary: Mendapatkan saldo wallet user
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/UserID"
+      responses:
+        "200":
+          description: Saldo berhasil diambil
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/BalanceData"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/transaction/withdraw:
+    post:
+      tags: [Transactions]
+      operationId: withdraw
+      summary: Melakukan withdraw dari wallet user yang login
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WithdrawRequest"
+      responses:
+        "200":
+          description: Withdraw berhasil diproses
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/WithdrawData"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    UserID:
+      name: user_id
+      in: path
+      required: true
+      description: UUID user
+      schema:
+        type: string
+        format: uuid
+  responses:
+    BadRequest:
+      description: Payload atau parameter tidak valid
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Unauthorized:
+      description: Token tidak tersedia atau tidak valid
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Forbidden:
+      description: User tidak diizinkan melakukan operasi
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFound:
+      description: Resource tidak ditemukan
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    InternalServerError:
+      description: Kesalahan internal server
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+  schemas:
+    SuccessResponse:
+      type: object
+      required: [status, message, error]
+      properties:
+        status:
+          type: boolean
+          enum: [true]
+        message:
+          type: string
+        data:
+          nullable: true
+        error:
+          nullable: true
+          example: null
+    ErrorResponse:
+      type: object
+      required: [status, message, error]
+      properties:
+        status:
+          type: boolean
+          enum: [false]
+        message:
+          type: string
+        error:
+          nullable: true
+    LoginRequest:
+      type: object
+      additionalProperties: false
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          format: password
+          minLength: 6
+          example: secret12
+    TokenData:
+      type: object
+      required: [token]
+      properties:
+        token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiJ9...
+    CreateUserRequest:
+      type: object
+      additionalProperties: false
+      required: [name, username, email, password, created_by]
+      properties:
+        name:
+          type: string
+          example: Afriyan
+        username:
+          type: string
+          example: afriyan
+        email:
+          type: string
+          format: email
+          example: afriyan@example.com
+        password:
+          type: string
+          format: password
+          minLength: 6
+          example: secret12
+        created_by:
+          type: string
+          example: system
+    UpdateUserRequest:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        name:
+          type: string
+          minLength: 1
+        username:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+          minLength: 6
+    BalanceData:
+      type: object
+      required: [wallet_id, balance, user]
+      properties:
+        wallet_id:
+          type: string
+          format: uuid
+        balance:
+          type: integer
+          format: int64
+          example: 100000
+        user:
+          $ref: "#/components/schemas/UserSummary"
+    UserSummary:
+      type: object
+      required: [user_id, name]
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+    WithdrawRequest:
+      type: object
+      additionalProperties: false
+      required: [amount]
+      properties:
+        amount:
+          type: integer
+          format: int64
+          minimum: 1
+          example: 40000
+        remark:
+          type: string
+          nullable: true
+          example: ATM
+    WithdrawData:
+      type: object
+      required: [transaction_id, reference_number, transaction, user]
+      properties:
+        transaction_id:
+          type: string
+          format: uuid
+        reference_number:
+          type: string
+        transaction:
+          type: object
+          required: [amount, type, balance_now]
+          properties:
+            amount:
+              type: integer
+              format: int64
+            type:
+              type: string
+              enum: [withdraw]
+            balance_now:
+              type: integer
+              format: int64
+            remark:
+              type: string
+              nullable: true
+        user:
+          $ref: "#/components/schemas/UserSummary"

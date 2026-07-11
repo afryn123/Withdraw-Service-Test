@@ -1,79 +1,65 @@
-version: '3.8'
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
 
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: postgres_db
-    restart: unless-stopped
+    container_name: withdraw-postgres
     environment:
-      - POSTGRES_USER=${DB_USER:-postgres}
-      - POSTGRES_PASSWORD=${DB_PASS:-postgres}
-      - POSTGRES_DB=${DB_NAME:-withdraw_db}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASS:-password}
+      POSTGRES_DB: ${DB_NAME:-withdraw_db}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
-      interval: 10s
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-withdraw_db}"]
+      interval: 5s
       timeout: 5s
-      retries: 5
-    networks:
-      - app-network
+      retries: 10
+    logging: *default-logging
 
-  # Run migration sebagai one-off command
   migrate:
+    container_name: withdraw-migrate
     build:
       context: .
-      dockerfile: Dockerfile
       args:
-        APP_DIR: cmd/migrate
-    container_name: be_withdraw_migrate
+        APP: migrate
+    environment: &app_environment
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASS: ${DB_PASS:-password}
+      DB_NAME: ${DB_NAME:-withdraw_db}
+      DB_SSL_MODE: disable
     depends_on:
       postgres:
         condition: service_healthy
-    environment:
-      - DB_HOST=postgres
-      - DB_PORT=5431
-      - DB_USER=${DB_USER:-postgres}
-      - DB_PASS=${DB_PASS:-postgres}
-      - DB_NAME=${DB_NAME:-withdraw_db}
-    networks:
-      - app-network
     restart: "no"
+    logging: *default-logging
 
-  app:
+  api:
+    container_name: withdraw-api
     build:
       context: .
-      dockerfile: Dockerfile
       args:
-        APP_DIR: cmd/server
-    image: be_withdraw:${VERSION:-latest}
-    container_name: be_withdraw
-    restart: unless-stopped
+        APP: api
+    environment:
+      <<: *app_environment
+      APP_PORT: 8080
+      JWT_SECRET: ${JWT_SECRET:-development-secret}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    ports:
+      - "8080:8080"
+    stop_grace_period: 15s
     depends_on:
-      postgres:
-        condition: service_healthy
       migrate:
         condition: service_completed_successfully
-    ports:
-      - "8081:8081"
-    environment:
-      - DB_HOST=postgres
-      - DB_PORT=5431
-      - DB_USER=${DB_USER:-postgres}
-      - DB_PASS=${DB_PASS:-postgres}
-      - DB_NAME=${DB_NAME:-withdraw_db}
-      - JWT_SECRET=${JWT_SECRET:-SECRET}
-      - TZ=Asia/Jakarta
-    volumes:
-      - ./logs:/app/logs:delegated
-    networks:
-      - app-network
+    logging: *default-logging
 
 volumes:
   postgres_data:
-
-networks:
-  app-network:
-    driver: bridge
